@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Neon Alley — CyberTech Store</title>
+
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#04040a;
+      --panel:#0d1020;
+      --neon1:#00e6ff;
+      --neon2:#ff4dff;
+      --muted:#9aa0b2;
+      --glass: rgba(255,255,255,0.04);
+      --card-shadow: 0 6px 24px rgba(0,0,0,0.6);
+    }
+    /* Reset */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body,#app{height:100%}
+    body{
+      background:
+        radial-gradient(1200px 600px at 10% 10%, rgba(0,70,120,0.06), transparent 8%),
+        radial-gradient(1000px 400px at 90% 90%, rgba(120,0,120,0.04), transparent 8%),
+        linear-gradient(180deg,#03030a,#050513 60%);
+      color:#e6eef6;
+      font-family: 'Share Tech Mono', monospace;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:28px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+    }
+
+    .store {
+      width:100%;
+      max-width:1200px;
+    }
+
+    header {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:18px;
+    }
+
+    .brand {
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+
+    .logo {
+      font-family: 'Orbitron', sans-serif;
+      font-weight:700;
+      font-size:22px;
+      letter-spacing:1px;
+      text-shadow: 0 0 10px rgba(0,230,255,0.08), 0 0 28px rgba(255,77,255,0.03);
+      color:var(--neon1);
+    }
+    .tag {
+      font-size:12px;
+      color:var(--muted);
+      margin-top:4px;
+    }
+
+    /* Search */
+    .controls{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+
+    .search {
+      display:flex;
+      align-items:center;
+      gap:8px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      padding:8px 12px;
+      border-radius:8px;
+      box-shadow:var(--card-shadow);
+      border:1px solid rgba(0,255,255,0.04);
+      min-width:250px;
+    }
+    .search input{
+      background:transparent;
+      border:0;
+      color:var(--muted);
+      outline:none;
+      font-size:13px;
+      width:220px;
+    }
+    .btn {
+      background:linear-gradient(90deg,var(--neon2),var(--neon1));
+      border:0;
+      color:#06060b;
+      padding:8px 12px;
+      border-radius:8px;
+      cursor:pointer;
+      font-weight:700;
+      box-shadow:0 6px 20px rgba(0,0,0,0.6);
+      transition:transform .14s ease;
+    }
+    .btn:active{transform:translateY(1px)}
+
+    /* Layout */
+    .main {
+      display:grid;
+      grid-template-columns: 1fr 320px;
+      gap:18px;
+    }
+
+    /* Product grid */
+    .grid {
+      display:grid;
+      grid-template-columns: repeat(auto-fill,minmax(220px,1fr));
+      gap:16px;
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:12px;
+      overflow:hidden;
+      position:relative;
+      border:1px solid rgba(255,255,255,0.03);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .card:hover{
+      transform:translateY(-8px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.75);
+    }
+
+    .thumb{
+      width:100%;
+      height:140px;
+      object-fit:cover;
+      display:block;
+      filter:contrast(1.05) saturate(1.08);
+      border-bottom:1px solid rgba(0,0,0,0.4);
+    }
+
+    .meta{
+      padding:12px;
+    }
+    .title{
+      font-weight:700;
+      color:var(--neon1);
+      font-size:14px;
+      margin-bottom:6px;
+      text-shadow:0 0 8px rgba(0,230,255,0.04);
+    }
+    .desc{
+      font-size:12px;
+      color:var(--muted);
+      min-height:34px;
+    }
+    .price-row{
+      margin-top:10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+    }
+    .price{
+      font-weight:700;
+      color:var(--neon2);
+      font-family:'Orbitron',sans-serif;
+      letter-spacing:0.6px;
+      font-size:15px;
+    }
+    .small{
+      font-size:12px;color:var(--muted)
+    }
+    .actions{display:flex;gap:8px}
+
+    /* Sidebar */
+    .side {
+      background:var(--panel);
+      padding:14px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.02);
+      box-shadow:var(--card-shadow);
+      min-height:240px;
+    }
+    .side h4{color:var(--neon1); margin-bottom:8px}
+
+    /* Cart list */
+    .cart-item{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+    .cart-item img{width:56px;height:40px;object-fit:cover;border-radius:6px}
+    .cart-meta{flex:1}
+    .cart-meta .n{font-weight:700;color:#fff;font-size:13px}
+    .cart-meta .q{font-size:12px;color:var(--muted)}
+
+    /* Modal */
+    .modal-backdrop{
+      position:fixed;inset:0;background:linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0.8));
+      display:flex;align-items:center;justify-content:center;padding:22px;z-index:80;
+    }
+    .modal{
+      background:linear-gradient(180deg, rgba(10,12,20,0.98), rgba(8,9,16,0.98));
+      border-radius:12px;padding:18px;max-width:900px;width:100%;display:flex;gap:16px;
+      border:1px solid rgba(0,255,255,0.04);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+    }
+    .modal .left img{width:340px;height:220px;object-fit:cover;border-radius:8px}
+    .modal .right{flex:1}
+    .closebtn{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);padding:6px 10px;border-radius:8px;cursor:pointer}
+
+    /* Auth modal */
+    .auth-input{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--muted);margin-bottom:8px}
+    .muted{color:var(--muted);font-size:13px}
+
+    /* Footer */
+    footer{margin-top:18px;color:var(--muted);font-size:12px;text-align:center}
+
+    /* Responsive */
+    @media (max-width:980px){
+      .main{grid-template-columns:1fr}
+      .modal .left img{width:240px;height:160px}
+    }
+  </style>
+</head>
+<body>
+  <div class="store" id="app">
+    <header>
+      <div class="brand">
+        <div class="logo">NEON ALLEY</div>
+        <div class="tag">cybertech · gadgets & widgets</div>
+      </div>
+
+      <div class="controls">
+        <div class="search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="opacity:.8"><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <input id="q" placeholder="Search gadgets, categories, or jargon..." />
+        </div>
+
+        <button class="btn" id="toggle-login">Sign In</button>
+        <button class="btn" id="reset-btn" title="Reset products">Reset</button>
+      </div>
+    </header>
+
+    <section class="main">
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <h2 style="color:var(--neon1)">Featured Devices</h2>
+          <div class="muted" id="result-count">—</div>
+        </div>
+
+        <div class="grid" id="grid"></div>
+      </div>
+
+      <aside class="side">
+        <h4>Cart</h4>
+        <div id="cart-list" style="min-height:100px"></div>
+        <div style="margin-top:8px;display:flex;justify-content:space-between;align-items:center">
+          <div class="muted">Total:</div>
+          <div id="cart-total" style="font-weight:700;color:var(--neon2)">$0.00</div>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:8px">
+          <button id="checkout" class="btn" style="flex:1">Checkout</button>
+          <button id="clear" class="closebtn" style="flex:1">Clear</button>
+        </div>
+        <hr style="border:none;border-top:1px solid rgba(255,255,255,0.03);margin:12px 0">
+        <div class="muted">Dev tools — frontend only</div>
+        <div style="margin-top:8px;display:flex;gap:8px">
+          <button id="seed-user" class="closebtn">Seed Demo User</button>
+          <button id="wipe" class="closebtn">Clear Storage</button>
+        </div>
+      </aside>
+    </section>
+
+    <footer>
+      Neon Alley — demo storefront • frontend auth only • not for production
+    </footer>
+  </div>
+
+  <!-- Modal containers -->
+  <div id="modal-root"></div>
+  <div id="auth-root"></div>
+
+  <script>
+  /*******************************************************
+   * Data: 40 fake tech products (names, categories)
+   * We simulate fetching to obey 'light JS fetch' concept.
+   *******************************************************/
+  const PRODUCTS = [
+    {id:1,name:"NeuraPod X9",cat:"Audio",price:89.99,stock:34,desc:"ANC earbuds with tactile bass.",img:"https://via.placeholder.com/640x420/00111a/00e6ff?text=NeuraPod+X9"},
+    {id:2,name:"AstroDrive Pro 2TB",cat:"Storage",price:149.99,stock:22,desc:"Portable NVMe with blistering speeds.",img:"https://via.placeholder.com/640x420/110002/ff4dff?text=AstroDrive+2TB"},
+    {id:3,name:"Quantum GPU Z3 (demo)",cat:"Components",price:799.99,stock:3,desc:"Prototype GPU built for ray-traced dreams.",img:"https://via.placeholder.com/640x420/031114/00e6ff?text=Quantum+GPU+Z3"},
+    {id:4,name:"Orbit Drone Mini",cat:"Drones",price:219.99,stock:14,desc:"Foldable drone with stabilized cam.",img:"https://via.placeholder.com/640x420/140a00/ff4dff?text=Orbit+Drone"},
+    {id:5,name:"Luma 4K 27\"",cat:"Displays",price:299.99,stock:8,desc:"Crisp 4K HDR panel.",img:"https://via.placeholder.com/640x420/00111a/00e6ff?text=Luma+4K"},
+    {id:6,name:"Vertex Mechanical Keyboard",cat:"Peripherals",price:129.99,stock:12,desc:"Hot-swappable tactile switches.",img:"https://via.placeholder.com/640x420/110002/ff4dff?text=Vertex+Keyboard"},
+    {id:7,name:"Photon Gaming Mouse",cat:"Peripherals",price:49.99,stock:48,desc:"High DPI, low latency.",img:"https://via.placeholder.com/640x420/031114/00e6ff?text=Photon+Mouse"},
+    {id:8,name:"Quark Portable SSD 1TB",cat:"Storage",price:99.99,stock:20,desc:"Pocket NVMe fast storage.",img:"https://via.placeholder.com/640x420/140a00/ff4dff?text=Quark+SSD"},
+    {id:9,name:"Aster Smartwatch Pro",cat:"Wearables",price:179.99,stock:21,desc:"Health, notifications, water resistant.",img:"https://via.placeholder.com/640x420/00111a/00e6ff?text=Aster+Watch"},
+    {id:10,name:"Pulse Bluetooth Speaker",cat:"Audio",price:39.99,stock:60,desc:"Portable speaker with deep bass.",img:"https://via.placeholder.com/640x420/110002/ff4dff?text=Pulse+Speaker"},
+    {id:11,name:"Ion Webcam 1080p",cat:"Accessories",price:59.99,stock:26,desc:"Crystal clear streaming cam.",img:"https://via.placeholder.com/640x420/031114/00e6ff?text=Ion+Webcam"},
+    {id:12,name:"Magnet Qi Charger Stand",cat:"Charging",price:29.99,stock:75,desc:"Fast wireless charging stand.",img:"https://via.placeholder.com/640x420/140a00/ff4dff?text=Magnet+Charger"},
+    {id:13,name:"Nebula Pro ANC Earbuds",cat:"Audio",price:119.99,stock:18,desc:"ANC earbuds + wireless case.",img:"https://via.placeholder.com/640x420/00111a/00e6ff?text=Nebula+Earbuds"},
+    {id:14,name:"Atlas Router AX3000",cat:"Networking",price:159.99,stock:10,desc:"Robust throughput, parental controls.",img:"https://via.placeholder.com/640x420/110002/ff4dff?text=Atlas+Router"},
+    {id:15,name:"Flux USB-C Hub",cat:"Accessories",price:24.99,stock:100,desc:"Multiport hub for laptops.",img:"https://via.placeholder.com/640x420/031114/00e6ff?text=Flux+Hub"},
+    {id:16,name:"Halo Smart Light Kit",cat:"Smart Home",price:69.99,stock:33,desc:"Dynamic lighting scenes.",img:"https://via.placeholder.com/640x420/140a00/ff4dff?text=Halo+Lights"},
+    {id:17,name:"Core Mini PC",cat:"Computers",price:449.99,stock:7,desc:"Compact desktop for productivity.",img:"https://via.placeholder.com/640x420/00111a/00e6ff?text=Core+Mini+PC"},
+    {id:18,name:"Titan Cooling Pad",cat:"Accessories",price:34.99,stock:44,desc:"Keep laptop thermals in check.",img:"https://via.placeholder.com/640x420/110002/ff4dff?text=Titan+Pad"},
+    {id:19,name:"Spectra Graphics Tablet",cat:"Creative",price:89.99,stock:27,desc:"Pressure-sensitive art tablet.",img:"https://via.placeholder.com/640x420/031114/00e6ff?text=Spectra+Tablet"},
+    {id:20,name:"Aurora RGB Strip 2m",cat:"Accessories",price:19.99,stock:120,desc:"Ambient lighting that syncs.",img:"https://via.placeholder.com/640x420/140a00/ff4dff?text=Aurora+Strip"},
+    {id:21,name:"Nimbus Laptop Sleeve 15\"",cat:"Accessories",price:22.99,stock:58,desc:"Padded sleeve, sleek.",img:"https://via.placeholder.com/640x420/00111a/00e6ff?text=Nimbus+Sleeve"},
+    {id:22,name:"Echo Noise-Cancelling Mic",cat:"Audio",price:69.99,stock:35,desc:"Studio-grade mic.",img:"https://via.placeholder.com/640x420/110002/ff4dff?text=Echo+Mic"},
+    {id:23,name:"Pulse Fitness Tracker",cat:"Wearables",price:49.99,stock:73,desc:"Steps, heart rate, sleep.",img:"https://via.placeholder.com/640x420/031114/00e6ff?text=Pulse+Tracker"},
+    {id:24,name:"Vortex Thermal Paste",cat:"PC Parts",price:9.99,stock:500,desc:"High-performance thermal compound.",img:"https://via.placeholder.com/640x420/140a00/ff4dff?text=Vortex+Paste"},
+    {id:25,name:"Solar Powerbank 20k",cat:"Charging",price:59.99,stock:23,desc:"Emergency power + solar top-up.",img:"https://via.placeholder.com/640x420/00111a/00e6ff?text=Solar+Powerbank"},
+    {id:26,name:"Nimbus Cooling Fan",cat:"PC Parts",price:19.99,stock:140,desc:"Silent high-airflow fan.",img:"https://via.placeholder.com/640x420/110002/ff4dff?text=Nimbus+Fan"},
+    {id:27,name:"Horizon NAS 2-Bay",cat:"Storage",price:249.99,stock:6,desc:"Home NAS for backups.",img:"https://via.placeholder.com/640x420/031114/00e6ff?text=Horizon+NAS"},
+    {id:28,name:"Zen 65W Charger",cat:"Charging",price:39.99,stock:85,desc:"GaN fast charging.",img:"https://via.placeholder.com/640x420/140a00/ff4dff?text=65W+Charger"},
+    {id:29,name:"Lumen Mini Projector",cat:"AV",price:149.99,stock:11,desc:"Portable movie nights.",img:"https://via.placeholder.com/640x420/00111a/00e6ff?text=Lumen+Projector"},
+    {id:30,name:"Arc Cable Pack",cat:"Cables",price:12.99,stock:230,desc:"Braided everyday cables.",img:"https://via.placeholder.com/640x420/110002/ff4dff?text=Cable+Pack"},
+    {id:31,name:"Beacon Security Cam",cat:"Smart Home",price:79.99,stock:29,desc:"Night vision + cloud.",img:"https://via.placeholder.com/640x420/031114/00e6ff?text=Beacon+Cam"},
+    {id:32,name:"Prism Laptop Backpack",cat:"Accessories",price:59.99,stock:16,desc:"Durable travel backpack.",img:"https://via.placeholder.com/640x420/140a00/ff4dff?text=Prism+Backpack"},
+    {id:33,name:"Specter HDMI 2.1",cat:"Cables",price:14.99,stock:210,desc:"4K 120Hz ready cable.",img:"https://via.placeholder.com/640x420/00111a/00e6ff?text=HDMI+2.1"},
+    {id:34,name:"Photon Microcontroller Kit",cat:"Education",price:34.99,stock:38,desc:"Prototype boards & sensors.",img:"https://via.placeholder.com/640x420/110002/ff4dff?text=Microcontroller+Kit"},
+    {id:35,name:"Atlas Smart Power Strip",cat:"Smart Home",price:34.99,stock:55,desc:"Remote control multiple plugs.",img:"https://via.placeholder.com/640x420/031114/00e6ff?text=Smart+Strip"},
+    {id:36,name:"Nebula Laptop Cooling Dock",cat:"Accessories",price:59.99,stock:25,desc:"Docking + cooling combo.",img:"https://via.placeholder.com/640x420/140a00/ff4dff?text=Cooling+Dock"},
+    {id:37,name:"Echo Buds Sport",cat:"Audio",price:59.99,stock:46,desc:"Sweat-resistant earbuds.",img:"https://via.placeholder.com/640x420/00111a/00e6ff?text=Echo+Buds+Sport"},
+    {id:38,name:"Pragma Smart Notepad",cat:"Creative",price:24.99,stock:61,desc:"Digitize handwriting.",img:"https://via.placeholder.com/640x420/110002/ff4dff?text=Smart+Notepad"},
+    {id:39,name:"Halo Desk Pad RGB",cat:"Accessories",price:29.99,stock:101,desc:"RGB desk surface with effects.",img:"https://via.placeholder.com/640x420/031114/00e6ff?text=Desk+Pad+RGB"},
+    {id:40,name:"Pulse Studio Headset",cat:"Audio",price:149.99,stock:13,desc:"Studio headset for pros.",img:"https://via.placeholder.com/640x420/140a00/ff4dff?text=Studio+Headset"}
+  ];
+
+  // tiny util
+  const $ = sel => document.querySelector(sel);
+  const cm = (tag, props = {}, children = []) => {
+    const el = document.createElement(tag);
+    Object.entries(props).forEach(([k,v])=>{ if(k==='class') el.className=v; else if(k==='html') el.innerHTML=v; else el.setAttribute(k,v)});
+    children.forEach(c => el.appendChild(c));
+    return el;
+  };
+
+  // simulate fetch (light)
+  function fetchProducts(){
+    return new Promise(resolve => {
+      setTimeout(()=> resolve(PRODUCTS.slice()), 180); // small delay to simulate network
+    });
+  }
+
+  // ------------ CART & AUTH (frontend only) ----------------
+  const LS_CART = 'neon_cart_v1';
+  const LS_USERS = 'neon_users_v1';
+  const LS_SESSION = 'neon_session_v1';
+
+  function saveCart(cart){ localStorage.setItem(LS_CART, JSON.stringify(cart)); }
+  function loadCart(){ try { return JSON.parse(localStorage.getItem(LS_CART)||'[]') } catch { return [] } }
+
+  function getUsers(){ try { return JSON.parse(localStorage.getItem(LS_USERS)||'[]') } catch { return [] } }
+  function saveUsers(u){ localStorage.setItem(LS_USERS, JSON.stringify(u)) }
+
+  function setSession(sess){ localStorage.setItem(LS_SESSION, JSON.stringify(sess)); }
+  function getSession(){ try { return JSON.parse(localStorage.getItem(LS_SESSION)) } catch { return null } }
+  function clearSession(){ localStorage.removeItem(LS_SESSION) }
+
+  // ------------ RENDERING ---------------
+  const gridEl = $('#grid');
+  const qEl = $('#q');
+  const resultCount = $('#result-count');
+  const cartListEl = $('#cart-list');
+  const cartTotalEl = $('#cart-total');
+
+  let PRODUCTS_CACHE = [];
+  let CART = loadCart();
+
+  function renderGrid(items){
+    gridEl.innerHTML = '';
+    items.forEach(p => {
+      const card = cm('div',{class:'card'});
+      const img = cm('img',{class:'thumb',src:p.img,alt:p.name});
+      const meta = cm('div',{class:'meta'});
+
+      const title = cm('div',{class:'title',html:p.name});
+      const desc = cm('div',{class:'desc',html:p.desc});
+      const priceRow = cm('div',{class:'price-row'});
+      const price = cm('div',{class:'price',html:`$${p.price.toFixed(2)}`});
+      const small = cm('div',{class:'small',html:`Stock: ${p.stock}`});
+      const actions = cm('div',{class:'actions'});
+      const viewbtn = cm('button',{class:'closebtn',type:'button',html:'View'});
+      const addbtn = cm('button',{class:'btn',type:'button',html:'Add'});
+
+      viewbtn.addEventListener('click',()=> openModal(p));
+      addbtn.addEventListener('click',()=> addToCart(p));
+
+      actions.appendChild(viewbtn);
+      actions.appendChild(addbtn);
+
+      priceRow.appendChild(price);
+      priceRow.appendChild(small);
+
+      meta.appendChild(title);
+      meta.appendChild(desc);
+      meta.appendChild(priceRow);
+      meta.appendChild(actions);
+
+      card.appendChild(img);
+      card.appendChild(meta);
+      gridEl.appendChild(card);
+    });
+
+    resultCount.textContent = `${items.length} items`;
+  }
+
+  function openModal(p){
+    const root = $('#modal-root');
+    root.innerHTML = '';
+    const backdrop = cm('div',{class:'modal-backdrop'});
+    const modal = cm('div',{class:'modal'});
+    const left = cm('div',{class:'left'});
+    const right = cm('div',{class:'right'});
+
+    const img = cm('img',{src:p.img,alt:p.name});
+    left.appendChild(img);
+
+    const h = cm('h3',{html:p.name, class:'title'});
+    const pd = cm('div',{html:`<p class="muted">${p.desc}</p><p class="muted" style="margin-top:8px">Category: ${p.cat}</p>`});
+    const price = cm('div',{class:'price',html:`$${p.price.toFixed(2)}`});
+    const stock = cm('div',{class:'small',html:`Stock: ${p.stock}`});
+    const buy = cm('button',{class:'btn',html:'Add to cart'});
+
+    buy.addEventListener('click', ()=>{
+      addToCart(p);
+      closeModal();
+    });
+
+    const close = cm('button',{class:'closebtn',html:'Close'});
+    close.addEventListener('click', closeModal);
+
+    right.appendChild(h);
+    right.appendChild(pd);
+    right.appendChild(price);
+    right.appendChild(stock);
+    right.appendChild(cm('div',{html:'<br/>'}));
+    right.appendChild(buy);
+    right.appendChild(close);
+
+    modal.appendChild(left);
+    modal.appendChild(right);
+    backdrop.appendChild(modal);
+    root.appendChild(backdrop);
+
+    backdrop.addEventListener('click', (e)=>{ if(e.target===backdrop) closeModal(); });
+
+    function closeModal(){
+      root.innerHTML = '';
+    }
+  }
+
+  function addToCart(p){
+    const existing = CART.find(x=>x.id===p.id);
+    if(existing){
+      existing.qty += 1;
+    } else {
+      CART.push({id:p.id,name:p.name,price:p.price,img:p.img,qty:1});
+    }
+    saveCart(CART);
+    renderCart();
+    flash(`Added ${p.name} to cart`);
+  }
+
+  function removeFromCart(id){
+    CART = CART.filter(i=>i.id!==id);
+    saveCart(CART);
+    renderCart();
+  }
+
+  function clearCart(){
+    CART = [];
+    saveCart(CART);
+    renderCart();
+  }
+
+  function renderCart(){
+    cartListEl.innerHTML = '';
+    if(CART.length===0){
+      cartListEl.innerHTML = '<div class="muted">Cart is empty. Browse the alley.</div>';
+      cartTotalEl.textContent = '$0.00';
+      return;
+    }
+    let total = 0;
+    CART.forEach(it=>{
+      total += it.price * it.qty;
+      const ci = cm('div',{class:'cart-item'});
+      const img = cm('img',{src:it.img});
+      const meta = cm('div',{class:'cart-meta'});
+      meta.innerHTML = `<div class="n">${it.name}</div><div class="q">${it.qty} × $${it.price.toFixed(2)}</div>`;
+      const rem = cm('button',{class:'closebtn',html:'Remove'});
+      rem.addEventListener('click', ()=> removeFromCart(it.id));
+      ci.appendChild(img);
+      ci.appendChild(meta);
+      ci.appendChild(rem);
+      cartListEl.appendChild(ci);
+    });
+    cartTotalEl.textContent = `$${total.toFixed(2)}`;
+  }
+
+  // ------------ Simple frontend auth (localStorage demo) ------------
+  function openAuth(){
+    const root = $('#auth-root');
+    root.innerHTML = '';
+    const backdrop = cm('div',{class:'modal-backdrop'});
+    const modal = cm('div',{class:'modal'});
+
+    modal.style.maxWidth = '520px';
+    modal.style.flexDirection = 'column';
+
+    const h = cm('h3',{html:'Sign in / Register'});
+    h.style.color = 'var(--neon1)';
+    const info = cm('div',{class:'muted',html:'Demo auth — stored locally for dev & testing.'});
+    const inpEmail = cm('input',{class:'auth-input',placeholder:'email',type:'email'});
+    const inpName = cm('input',{class:'auth-input',placeholder:'full name (for register)',type:'text'});
+    const inpPass = cm('input',{class:'auth-input',placeholder:'password',type:'password'});
+    const row = cm('div',{style:'display:flex;gap:8px;margin-top:8px'});
+    const btnLogin = cm('button',{class:'btn',html:'Login'});
+    const btnReg = cm('button',{class:'closebtn',html:'Register'});
+    const status = cm('div',{class:'muted',html:''});
+
+    btnLogin.addEventListener('click', ()=>{
+      const email = inpEmail.value.trim(); const pass = inpPass.value.trim();
+      const users = getUsers();
+      const found = users.find(u=>u.email===email && u.password===btoa(pass));
+      if(found){
+        setSession({email:found.email,name:found.name});
+        status.innerHTML = 'Welcome back, ' + found.name;
+        renderSession();
+        setTimeout(()=> closeAuth(),600);
+      } else status.innerHTML = 'Invalid credentials (demo)';
+    });
+
+    btnReg.addEventListener('click', ()=>{
+      const email = inpEmail.value.trim(); const pass = inpPass.value.trim(); const name = inpName.value.trim() || 'Guest';
+      if(!email || !pass){ status.innerHTML='Email & pass required'; return; }
+      const users = getUsers();
+      if(users.some(u=>u.email===email)){ status.innerHTML='Email exists'; return; }
+      users.push({email,name,password:btoa(pass)});
+      saveUsers(users);
+      status.innerHTML = 'Registered. You may log in.';
+    });
+
+    row.appendChild(btnLogin); row.appendChild(btnReg);
+    modal.appendChild(h); modal.appendChild(info); modal.appendChild(inpEmail); modal.appendChild(inpName); modal.appendChild(inpPass); modal.appendChild(row); modal.appendChild(status);
+
+    const close = cm('button',{class:'closebtn',html:'Close'});
+    close.style.marginTop = '12px';
+    close.addEventListener('click', closeAuth);
+    modal.appendChild(close);
+
+    backdrop.appendChild(modal);
+    root.appendChild(backdrop);
+
+    backdrop.addEventListener('click',(e)=>{ if(e.target===backdrop) closeAuth(); });
+
+    function closeAuth(){ root.innerHTML=''; }
+  }
+
+  function renderSession(){
+    const sess = getSession();
+    const btn = $('#toggle-login');
+    if(sess){
+      btn.textContent = `Hi, ${sess.name} (Logout)`;
+      btn.onclick = ()=>{ clearSession(); renderSession(); flash('Logged out'); }
+    } else {
+      btn.textContent = 'Sign In';
+      btn.onclick = openAuth;
+    }
+  }
+
+  // ------------ Search & utils --------------
+  function qFilter(q,arr){
+    if(!q) return arr;
+    const t = q.toLowerCase();
+    return arr.filter(p => (p.name + ' ' + p.desc + ' ' + p.cat).toLowerCase().includes(t));
+  }
+
+  function flash(msg){
+    // subtle transient toast
+    const t = cm('div',{html:msg, style:'position:fixed;right:18px;bottom:18px;background:linear-gradient(90deg,var(--neon2),var(--neon1));color:#06060b;padding:10px 12px;border-radius:8px;z-index:200;font-weight:700;box-shadow:0 12px 40px rgba(0,0,0,0.6)'});
+    document.body.appendChild(t);
+    setTimeout(()=> t.style.opacity = '0',1600);
+    setTimeout(()=> t.remove(),2000);
+  }
+
+  // ---------- init ----------
+  (function init(){
+    // wire events
+    $('#reset-btn').addEventListener('click', ()=> {
+      PRODUCTS_CACHE = PRODUCTS.slice();
+      renderGrid(PRODUCTS_CACHE);
+      flash('Products reset');
+    });
+
+    $('#q').addEventListener('input', e => {
+      renderGrid(qFilter(e.target.value, PRODUCTS_CACHE));
+    });
+
+    $('#checkout').addEventListener('click', ()=>{
+      if(!getSession()){ flash('Sign in to checkout (demo)'); openAuth(); return; }
+      if(CART.length===0){ flash('Cart empty'); return; }
+      flash('Order placed — demo only. Thank you!');
+      clearCart();
+    });
+
+    $('#clear').addEventListener('click', clearCart);
+
+    $('#seed-user').addEventListener('click', ()=> {
+      const users = getUsers();
+      users.push({email:'demo@neon.test',name:'Demo',password:btoa('demo123')});
+      saveUsers(users);
+      flash('Demo user seeded: demo@neon.test / demo123');
+    });
+
+    $('#wipe').addEventListener('click', ()=> {
+      localStorage.clear();
+      CART = [];
+      renderCart();
+      renderSession();
+      flash('Local storage cleared');
+    });
+
+    // initial fetch
+    fetchProducts().then(res=>{
+      PRODUCTS_CACHE = res;
+      renderGrid(PRODUCTS_CACHE);
+      renderCart();
+      renderSession();
+    });
+
+    // accessibility: keyboard 'Enter' on search triggers find
+    qEl.addEventListener('keydown', (e)=> { if(e.key==='Enter') { renderGrid(qFilter(qEl.value, PRODUCTS_CACHE)); } });
+  })();
+  </script>
+</body>
+</html>
